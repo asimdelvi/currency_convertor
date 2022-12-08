@@ -51,13 +51,8 @@ function App() {
 
   return (
     <div className="App">
-      <h1>Convert</h1>
-      <div>
-        <input
-          value={fromAmount}
-          type="number"
-          onChange={(e) => setFromAmount(parseInt(e.target.value))}
-        ></input>
+      <h id="heading">Convert</h>
+      <div class="inputs">
         <select
           name="fromCurrency"
           value={fromCurrency}
@@ -75,14 +70,13 @@ function App() {
               );
             })}
         </select>
-      </div>
-      <div>
         <input
+          value={fromAmount}
           type="number"
-          value={toAmount}
-          onChange={(e) => setToAmount(e.target.value)}
-          readOnly
+          onChange={(e) => setFromAmount(parseInt(e.target.value))}
         ></input>
+      </div>
+      <div class="inputs">
         <select
           name="toCurrency"
           value={toCurrency}
@@ -99,6 +93,12 @@ function App() {
               );
             })}
         </select>
+        <input
+          type="number"
+          value={toAmount}
+          onChange={(e) => setToAmount(e.target.value)}
+          readOnly
+        ></input>
       </div>
       <div>Render Count: {renderCount.current}</div>
     </div>
