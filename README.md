@@ -2,6 +2,10 @@
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
+## Live Site
+
+Open the [live site](https://asimdelvi.github.io/currency_convertor/) to convert your preferred currency.
+
 ## Available Scripts
 
 In the project directory, you can run:
