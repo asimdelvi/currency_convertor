@@ -4,8 +4,12 @@ import React, { useEffect, useState, useRef } from "react";
 function App() {
   const [fromCurrency, setFromCurrency] = useState("INR");
   const [toCurrency, setToCurrency] = useState("USD");
+
   const [fromAmount, setFromAmount] = useState(1);
   const [toAmount, setToAmount] = useState(1);
+
+  const [whichComponent, setWhichComponent] = useState(0);
+
   const [symbols, setSymbols] = useState();
   const renderCount = useRef(0);
 
@@ -19,7 +23,6 @@ function App() {
       }
     );
     const data = await res.json();
-    console.log(data);
     return setSymbols(data.symbols);
   }
 
@@ -33,7 +36,7 @@ function App() {
       }
     );
     const data = await res.json();
-    return setToAmount(data.result);
+    return data.result;
   }
 
   // ! component is rerendering multiple times (4 times)
@@ -42,8 +45,17 @@ function App() {
   }, []);
 
   useEffect(() => {
-    fetchConverted(fromAmount, fromCurrency, toCurrency);
-  }, [fromAmount, fromCurrency, toCurrency]);
+    let res;
+    if (whichComponent === 0) {
+      res = fetchConverted(fromAmount, fromCurrency, toCurrency);
+      setToAmount(res);
+      console.log("toAmt");
+    } else if (whichComponent === 1) {
+      res = fetchConverted(toAmount, toCurrency, fromCurrency);
+      setFromAmount(res);
+      console.log("fromAmt");
+    }
+  }, [fromAmount, fromCurrency, whichComponent, toCurrency, toAmount]);
 
   useEffect(() => {
     renderCount.current += 1;
@@ -52,6 +64,7 @@ function App() {
   return (
     <div className="App">
       <h id="heading">Convert</h>
+
       <div class="inputs">
         <select
           name="fromCurrency"
@@ -73,9 +86,13 @@ function App() {
         <input
           value={fromAmount}
           type="number"
-          onChange={(e) => setFromAmount(parseInt(e.target.value))}
+          onChange={(e) => {
+            setFromAmount(parseInt(e.target.value));
+            setWhichComponent(0);
+          }}
         ></input>
       </div>
+
       <div class="inputs">
         <select
           name="toCurrency"
@@ -96,8 +113,10 @@ function App() {
         <input
           type="number"
           value={toAmount}
-          onChange={(e) => setToAmount(e.target.value)}
-          readOnly
+          onChange={(e) => {
+            setToAmount(parseInt(e.target.value));
+            setWhichComponent(1);
+          }}
         ></input>
       </div>
       <div>Render Count: {renderCount.current}</div>
