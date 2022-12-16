@@ -1,61 +1,48 @@
 import "./App.css";
 import React, { useEffect, useState, useRef } from "react";
 
-function App() {
-  const [fromCurrency, setFromCurrency] = useState("INR");
-  const [toCurrency, setToCurrency] = useState("USD");
+const BASE_URL = "https://cdn.jsdelivr.net/gh/fawazahmed0/currency-api@1";
 
-  const [fromAmount, setFromAmount] = useState(1);
-  const [toAmount, setToAmount] = useState(1);
+function App() {
+  const [fromCurrency, setFromCurrency] = useState("inr");
+  const [toCurrency, setToCurrency] = useState("usd");
+  const [rate, setRate] = useState();
+
+  const [amount, setAmount] = useState(1);
 
   const [whichComponent, setWhichComponent] = useState(0);
 
   const [symbols, setSymbols] = useState();
   const renderCount = useRef(0);
 
+  let fromAmount, toAmount;
+  if (whichComponent === 0) {
+    fromAmount = amount;
+    toAmount = (rate * amount).toFixed(3);
+  } else if (whichComponent === 1) {
+    toAmount = amount;
+    fromAmount = (amount / rate).toFixed(3);
+  }
+
   async function fetchSymbol() {
-    const res = await fetch(
-      "https://api.apilayer.com/exchangerates_data/symbols",
-      {
-        headers: {
-          apikey: process.env.REACT_APP_CURRENCY_API_KEY,
-        },
-      }
-    );
+    const res = await fetch(`${BASE_URL}/latest/currencies.json`);
     const data = await res.json();
-    return setSymbols(data.symbols);
+    return setSymbols(data);
   }
 
-  async function fetchConverted(amount, from, to) {
-    const res = await fetch(
-      `https://api.apilayer.com/exchangerates_data/convert?to=${to}&from=${from}&amount=${amount}`,
-      {
-        headers: {
-          apikey: process.env.REACT_APP_CURRENCY_API_KEY,
-        },
-      }
-    );
+  async function fetchConverted(from, to) {
+    const res = await fetch(`${BASE_URL}/latest/currencies/${from}/${to}.json`);
     const data = await res.json();
-    return data.result;
+    return setRate(data[to]);
   }
 
-  // ! component is rerendering multiple times (4 times)
   useEffect(() => {
     fetchSymbol();
   }, []);
 
   useEffect(() => {
-    let res;
-    if (whichComponent === 0) {
-      res = fetchConverted(fromAmount, fromCurrency, toCurrency);
-      setToAmount(res);
-      console.log("toAmt");
-    } else if (whichComponent === 1) {
-      res = fetchConverted(toAmount, toCurrency, fromCurrency);
-      setFromAmount(res);
-      console.log("fromAmt");
-    }
-  }, [fromAmount, fromCurrency, whichComponent, toCurrency, toAmount]);
+    fetchConverted(fromCurrency, toCurrency);
+  }, [fromCurrency, toCurrency]);
 
   useEffect(() => {
     renderCount.current += 1;
@@ -63,9 +50,9 @@ function App() {
 
   return (
     <div className="App">
-      <h id="heading">Convert</h>
+      <h1 id="heading">Convert</h1>
 
-      <div class="inputs">
+      <div className="inputs">
         <select
           name="fromCurrency"
           value={fromCurrency}
@@ -87,13 +74,13 @@ function App() {
           value={fromAmount}
           type="number"
           onChange={(e) => {
-            setFromAmount(parseInt(e.target.value));
+            setAmount(parseInt(e.target.value));
             setWhichComponent(0);
           }}
         ></input>
       </div>
 
-      <div class="inputs">
+      <div className="inputs">
         <select
           name="toCurrency"
           value={toCurrency}
@@ -111,10 +98,10 @@ function App() {
             })}
         </select>
         <input
-          type="number"
           value={toAmount}
+          type="number"
           onChange={(e) => {
-            setToAmount(parseInt(e.target.value));
+            setAmount(parseInt(e.target.value));
             setWhichComponent(1);
           }}
         ></input>
@@ -125,3 +112,7 @@ function App() {
 }
 
 export default App;
+
+// TODO: Separate the components
+// TODO: Decimal value to input
+// TODO: Add comments, document the code
