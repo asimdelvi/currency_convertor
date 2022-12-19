@@ -1,5 +1,6 @@
 import "./App.css";
 import React, { useEffect, useState, useRef } from "react";
+import CurrencyInput from "./currencyInput.js";
 
 const BASE_URL = "https://cdn.jsdelivr.net/gh/fawazahmed0/currency-api@1";
 
@@ -48,64 +49,42 @@ function App() {
     renderCount.current += 1;
   });
 
+  const onFromAmountChange = (e) => {
+    setAmount(parseInt(e.target.value));
+    setWhichComponent(0);
+  };
+
+  const onToAmountChange = (e) => {
+    setAmount(parseInt(e.target.value));
+    setWhichComponent(0);
+  };
+
   return (
     <div className="App">
       <h1 id="heading">Convert</h1>
 
-      <div className="inputs">
-        <select
-          name="fromCurrency"
-          value={fromCurrency}
-          title={fromCurrency}
-          onChange={(e) => {
-            setFromCurrency(e.target.value);
-          }}
-        >
-          {symbols &&
-            Object.keys(symbols).map((key, index) => {
-              return (
-                <option title={symbols[key]} value={key} key={index}>
-                  {key}
-                </option>
-              );
-            })}
-        </select>
-        <input
-          value={fromAmount}
-          type="number"
-          onChange={(e) => {
-            setAmount(parseInt(e.target.value));
-            setWhichComponent(0);
-          }}
-        ></input>
-      </div>
+      <CurrencyInput
+        currency={fromCurrency}
+        symbols={symbols}
+        amount={fromAmount}
+        onCurrencyChange={(e) => {
+          setFromCurrency(e.target.value);
+        }}
+        onAmountChange={onFromAmountChange()}
+      />
 
-      <div className="inputs">
-        <select
-          name="toCurrency"
-          value={toCurrency}
-          onChange={(e) => {
-            setToCurrency(e.target.value);
-          }}
-        >
-          {symbols &&
-            Object.keys(symbols).map((key, index) => {
-              return (
-                <option title={symbols[key]} value={key} key={index}>
-                  {key}
-                </option>
-              );
-            })}
-        </select>
-        <input
-          value={toAmount}
-          type="number"
-          onChange={(e) => {
-            setAmount(parseInt(e.target.value));
-            setWhichComponent(1);
-          }}
-        ></input>
-      </div>
+      <CurrencyInput
+        currency={toCurrency}
+        symbols={symbols}
+        toAmount={toAmount}
+        onCurrencyChange={(e) => {
+          setToCurrency(e.target.value);
+        }}
+        onAmountChange={(e) => {
+          return onToAmountChange(e);
+        }}
+      />
+
       <div>Render Count: {renderCount.current}</div>
     </div>
   );
