@@ -12,7 +12,12 @@ export default function CurrencyInput(props) {
             );
           })}
       </select>
-      <input value={amount} type="number" onChange={onAmountChange}></input>
+      <input
+        step="any"
+        value={amount}
+        type="number"
+        onChange={onAmountChange}
+      ></input>
     </div>
   );
 }

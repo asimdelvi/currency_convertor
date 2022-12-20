@@ -50,7 +50,7 @@ function App() {
   });
 
   const onAmountChange = (e, comp) => {
-    setAmount(parseInt(e.target.value));
+    setAmount(parseFloat(e.target.value));
     setWhichComponent(comp);
   };
 
