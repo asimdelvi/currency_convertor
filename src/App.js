@@ -49,14 +49,9 @@ function App() {
     renderCount.current += 1;
   });
 
-  const onFromAmountChange = (e) => {
+  const onAmountChange = (e, comp) => {
     setAmount(parseInt(e.target.value));
-    setWhichComponent(0);
-  };
-
-  const onToAmountChange = (e) => {
-    setAmount(parseInt(e.target.value));
-    setWhichComponent(0);
+    setWhichComponent(comp);
   };
 
   return (
@@ -70,19 +65,17 @@ function App() {
         onCurrencyChange={(e) => {
           setFromCurrency(e.target.value);
         }}
-        onAmountChange={onFromAmountChange()}
+        onAmountChange={(e) => onAmountChange(e, 0)}
       />
 
       <CurrencyInput
         currency={toCurrency}
         symbols={symbols}
-        toAmount={toAmount}
+        amount={toAmount}
         onCurrencyChange={(e) => {
           setToCurrency(e.target.value);
         }}
-        onAmountChange={(e) => {
-          return onToAmountChange(e);
-        }}
+        onAmountChange={(e) => onAmountChange(e, 1)}
       />
 
       <div>Render Count: {renderCount.current}</div>
@@ -92,6 +85,5 @@ function App() {
 
 export default App;
 
-// TODO: Separate the components
 // TODO: Decimal value to input
 // TODO: Add comments, document the code
