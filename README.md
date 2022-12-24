@@ -1,6 +1,12 @@
-# Getting Started with Create React App
+# Currency Converter
+
+## Getting Started with Create React App
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+
+## Screenshot
+
+![screenshot](Screenshot%20from%202022-12-24%2013-44-12.png)
 
 ## Live Site
 

@@ -85,5 +85,4 @@ function App() {
 
 export default App;
 
-// TODO: Decimal value to input
-// TODO: Add comments, document the code
+// TODO: Add comments, document the code, optimize
